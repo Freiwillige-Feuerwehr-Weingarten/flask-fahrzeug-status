@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Fahrzeugstatus für {{ vehicle }}</h1>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th>Status</th>
+                <th>Uhrzeit</th>
+            </tr>
+        <tbody>
+    {% for record in records %}
+            <tr>
+                <td>{{record[1]}}</td>
+                <td>{{record[2]}}</td>
+    {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}
