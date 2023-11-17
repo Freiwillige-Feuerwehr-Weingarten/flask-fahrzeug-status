@@ -67,7 +67,6 @@ async_pool = get_async_pool()
 class RelevantVehicles:
     vehicle_dict = {}
     def __init__(self):
-        # TODO: ask the freaking db
         with get_conn() as conn:
             with conn.cursor() as cursor:
                 cursor.execute("SELECT issi, funkrufname FROM fahrzeuge")
@@ -75,7 +74,9 @@ class RelevantVehicles:
                 for row in results:
                     self.vehicle_dict[row[0]] = row[1]
 
-vehicles = RelevantVehicles()
+@lru_cache
+def get_relevant_vehicles():
+    return RelevantVehicles()
 
 async def check_async_connection():
     while True:
@@ -97,20 +98,6 @@ async def get_newest_status():
             print(notify)
             splits = notify.payload.strip("()").split(",")
             return splits[0], splits[1]
-    return
-    # remove below
-    with psycopg.Connection.connect(dbname=settings.db_name,
-                                                     host=settings.db_host,
-                                                     user=settings.db_user,
-                                                     password=settings.db_password,
-                                                     port=settings.db_port,
-                                                     autocommit=True) as aconn:
-        aconn.execute("LISTEN status_notification")
-        generator = aconn.notifies()
-        for notify in generator:
-            print(notify)
-            splits = notify.payload.strip("()").split(",")
-            return splits[0], splits[1]
              
 
 @app.websocket("/ws/{client_id}")
@@ -119,7 +106,7 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
     try:
         while True:
             issi, status = await get_newest_status()
-            if issi in vehicles.vehicle_dict:
+            if issi in get_relevant_vehicles().vehicle_dict:
                 new_status = dict(issi=issi, status=status)
                 await ws_manager.broadcast(json.dumps(new_status))
             else:
