@@ -7,7 +7,6 @@ from datetime import datetime
 from functools import lru_cache
 from psycopg_pool import AsyncConnectionPool
 from contextlib import asynccontextmanager
-import psycopg2
 import psycopg
 import json
 import asyncio
