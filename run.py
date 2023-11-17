@@ -159,19 +159,6 @@ async def status(request: Request, vehicle: str):
             return templates.TemplateResponse("fahrzeug.html", {"request": request,
                                                                 "vehicle": vehicle,
                                                                 "records": records}) 
-    connection = psycopg2.connect(database=settings.db_name,
-                                  host=settings.db_host,
-                                  user=settings.db_user,
-                                  password=settings.db_password,
-                                  port=settings.db_port)
-    cursor = connection.cursor()
-    cursor.execute("SELECT * FROM fahrzeug_status, fahrzeuge WHERE fahrzeug_status.issi = fahrzeuge.issi AND fahrzeuge.funkrufname = '%s' ORDER BY timestamp DESC" %vehicle)
-    records = cursor.fetchall()
-    cursor.close()
-    connection.close()
-    return templates.TemplateResponse("fahrzeug.html", {"request": request,
-                                                     "vehicle": vehicle,
-                                                     "records": records}) 
 
 
 if __name__ == "__main__":
