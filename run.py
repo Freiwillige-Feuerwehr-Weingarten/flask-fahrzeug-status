@@ -47,30 +47,11 @@ class ConnectionManager:
             await connection.send_text(message)
 
 
-class RelevantVehicles:
-    vehicle_dict = {}
-    def __init__(self):
-        # TODO: ask the freaking db
-        self.vehicle_dict['6145082'] = "50"
-        self.vehicle_dict['6145077'] = "10"
-        self.vehicle_dict['6145075'] = "191"
-        self.vehicle_dict['6145084'] = "23"
-        self.vehicle_dict['6145087'] = "33"
-        self.vehicle_dict['6145085'] = "441"
-        self.vehicle_dict['6145086'] = "442"
-        self.vehicle_dict['6145083'] = "52"
-        self.vehicle_dict['6145284'] = "591"
-        self.vehicle_dict['6145088'] = "73"
-        self.vehicle_dict['6145089'] = "56"
-        self.vehicle_dict['6145076'] = "192"
-        self.vehicle_dict['6145074'] = "10"
-        self.vehicle_dict['6145090'] = "100"
-
 ws_manager = ConnectionManager()
 settings = get_settings()
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
-vehicles = RelevantVehicles()
+
 
 conninfo = f"dbname={settings.db_name} host={settings.db_host} user={settings.db_user} password={settings.db_password} port={settings.db_port}"
 
@@ -82,6 +63,19 @@ def get_async_pool():
     return AsyncConnectionPool(conninfo=conninfo)
 
 async_pool = get_async_pool()
+
+class RelevantVehicles:
+    vehicle_dict = {}
+    def __init__(self):
+        # TODO: ask the freaking db
+        with get_conn() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute("SELECT issi, funkrufname FROM fahrzeuge")
+                results = cursor.fetchall()
+                for row in results:
+                    self.vehicle_dict[row[0]] = row[1]
+
+vehicles = RelevantVehicles()
 
 async def check_async_connection():
     while True:
