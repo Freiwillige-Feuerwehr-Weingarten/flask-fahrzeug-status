@@ -16,13 +16,13 @@
     <br />
     <div class="row">
         <div class="col">
-            <button type="button" class="btn btn-primary btn-lg w-100">Status: {{ status10 }}</button>
+            <button type="button" id="6145074" class="btn btn-primary btn-lg w-100">Status: {{ status10 }}</button>
         </div>
         <div class="col">
-            <button type="button" class="btn btn-primary btn-lg w-100">Status: {{ status11 }}</button>
+            <button type="button" id="6145077" class="btn btn-primary btn-lg w-100">Status: {{ status11 }}</button>
         </div>
         <div class="col">
-            <button type="button" class="btn btn-primary btn-lg w-100">Status: {{ status23 }}</button>
+            <button type="button" id="6145084" class="btn btn-primary btn-lg w-100">Status: {{ status23 }}</button>
         </div>
     </div>
     <p />
@@ -40,13 +40,13 @@
     <br />
     <div class="row">
         <div class="col">
-            <button type="button" class="btn btn-primary btn-lg w-100">Status: {{ status33 }}</button>
+            <button type="button" id="6145087" class="btn btn-primary btn-lg w-100">Status: {{ status33 }}</button>
         </div>
         <div class="col">
-            <button type="button" class="btn btn-primary btn-lg w-100">Status: {{ status441 }}</button>
+            <button type="button" id="6145085" class="btn btn-primary btn-lg w-100">Status: {{ status441 }}</button>
         </div>
         <div class="col">
-            <button type="button" class="btn btn-primary btn-lg w-100">Status: {{ status442 }}</button>
+            <button type="button" id="6145086" class="btn btn-primary btn-lg w-100">Status: {{ status442 }}</button>
         </div>
     </div>
     <p />
@@ -64,13 +64,13 @@
     <br />
     <div class="row">
         <div class="col">
-            <button type="button" class="btn btn-primary btn-lg w-100">Status: {{ status50 }}</button>
+            <button type="button" id="6145082" class="btn btn-primary btn-lg w-100">Status: {{ status50 }}</button>
         </div>
         <div class="col">
-            <button type="button" class="btn btn-primary btn-lg w-100">Status: {{ status52 }}</button>
+            <button type="button" id="6145083" class="btn btn-primary btn-lg w-100">Status: {{ status52 }}</button>
         </div>
         <div class="col">
-            <button type="button" class="btn btn-primary btn-lg w-100">Status: {{ status56 }}</button>
+            <button type="button" id="6145089" class="btn btn-primary btn-lg w-100">Status: {{ status56 }}</button>
         </div>
     </div>
     <p />
@@ -88,13 +88,13 @@
     <br />
     <div class="row">
         <div class="col">
-            <button type="button" class="btn btn-primary btn-lg w-100">Status: {{ status591 }}</button>
+            <button type="button" id="6145284" class="btn btn-primary btn-lg w-100">Status: {{ status591 }}</button>
         </div>
         <div class="col">
-            <button type="button" class="btn btn-primary btn-lg w-100">Status: {{ status73 }}</button>
+            <button type="button" id="6145088" class="btn btn-primary btn-lg w-100">Status: {{ status73 }}</button>
         </div>
         <div class="col">
-            <button type="button" class="btn btn-primary btn-lg w-100">Status: {{ status191 }}</button>
+            <button type="button" id="6145075" class="btn btn-primary btn-lg w-100">Status: {{ status191 }}</button>
         </div>
     </div>
     <p />
@@ -103,6 +103,7 @@
             <a href="/status/192"><img class="img-fluid" src="https://www.feuerwehr-weingarten.de/wp-content/uploads/2019/11/weingarten_19_2.jpg" alt="MTW-2" /></a>
         </div>
         <div class="col">
+            <a href="/status/100">Leitstand</a>
         </div>
         <div class="col">
         </div>
@@ -110,11 +111,22 @@
     <br />
     <div class="row">
         <div class="col">
-            <button type="button" class="btn btn-primary btn-lg w-100">Status: {{ status192 }}</button>
+            <button type="button" id="6145076" class="btn btn-primary btn-lg w-100">Status: {{ status192 }}</button>
         </div>
         <div class="col">
+            <button type="button" id="6145090" class="btn btn-primary btn-lg w-100">Status: {{ status100 }}</button>
         </div>
         <div class="col">
         </div>
     </div>
+    <script>
+        var client_id = Date.now()
+        var ws = new WebSocket(`ws://localhost:8000/ws/${client_id}`);
+        ws.onmessage = function(event) {
+            var obj = JSON.parse(event.data)
+            var messages = document.getElementById(obj.issi)
+            messages.innerHTML = "Status " + obj.status
+            console.log(obj)
+        };
+    </script>
 {% endblock %}
