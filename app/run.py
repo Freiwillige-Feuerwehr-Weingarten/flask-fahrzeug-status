@@ -109,7 +109,10 @@ async def favicon():
 
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request, "vdict": get_latest_vehicles_status()})
+    return templates.TemplateResponse("index.html", {"request": request,
+                                                     "vdict": get_latest_vehicles_status(),
+                                                     "server_hostname": settings.server_hostname,
+                                                     "server_port": settings.server_port})
 
 
 @app.get("/status/{vehicle}", response_class=HTMLResponse)

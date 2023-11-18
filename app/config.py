@@ -7,6 +7,8 @@ class Settings(BaseSettings):
     db_user: str
     db_password: str
     db_port: int
+    server_hostname: str
+    server_port: int
     model_config = SettingsConfigDict(env_file='test.env')
     # TODO: Shall be this
     # model_config = SettingsConfigDict(env_file='prod.env', secrets_dir='')
