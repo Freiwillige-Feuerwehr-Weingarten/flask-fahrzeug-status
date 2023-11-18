@@ -45,11 +45,13 @@ async def lifespan(app: FastAPI):
     yield
     pass
 
+
 async def get_newest_status():
-    async with async_pool.connection() as conn:
-        await conn.execute("LISTEN status_notification")
-        generator = conn.notifies()
-        async for notify in generator:
+    # no async connection needed here
+    with get_conn() as conn:
+        conn.execute("LISTEN status_notification")
+        print(f"Notification received")
+        for notify in conn.notifies():
             print(notify)
             splits = notify.payload.strip("()").split(",")
             return splits[0], splits[1]
@@ -67,6 +69,7 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
             else:
                 print(f"Skipping irrelevant vehicle status")
     except WebSocketDisconnect:
+        # TODO: Could also get psycopg.OperatoinalError
         print(f"Client disconnected")
         ws_manager.disconnect(websocket)
 
@@ -85,6 +88,7 @@ def get_vehicle_status(vehicle):
     else: 
         return records[0]
     
+
 def get_latest_vehicles_status() -> dict:
     vehicle_status_dict = dict()
     with get_conn() as connection:
