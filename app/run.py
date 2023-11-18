@@ -83,25 +83,27 @@ def get_vehicle_status(vehicle):
         return "Nicht bekannt"
     else: 
         return records[0]
+    
+def get_latest_vehicles_status() -> dict:
+    vehicle_status_dict = dict()
+    with get_conn() as connection:
+        with connection.cursor() as cursor:
+            for issi in get_relevant_vehicles().vehicle_dict: 
+                try:
+                    cursor.execute("SELECT fahrzeug_status.status FROM fahrzeug_status, fahrzeuge WHERE fahrzeug_status.issi = fahrzeuge.issi AND fahrzeuge.issi = '%s' ORDER BY timestamp DESC LIMIT 1" %issi)
+                    r = cursor.fetchone()
+                    if not r:
+                        vehicle_status_dict[issi] = "Nicht bekannt"
+                    else:
+                        vehicle_status_dict[issi] = r[0]
+                except (Exception, psycopg.DatabaseError) as e:
+                    pass
+    return vehicle_status_dict
 
 
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request, 
-                                                     "status10": get_vehicle_status(10),
-                                                     "status11": get_vehicle_status(11),
-                                                     "status23": get_vehicle_status(23),
-                                                     "status33": get_vehicle_status(33),
-                                                     "status441": get_vehicle_status(441),
-                                                     "status442": get_vehicle_status(442),
-                                                     "status50": get_vehicle_status(50),
-                                                     "status52": get_vehicle_status(52),
-                                                     "status56": get_vehicle_status(56),
-                                                     "status591": get_vehicle_status(591),
-                                                     "status73": get_vehicle_status(73),
-                                                     "status191": get_vehicle_status(191),
-                                                     "status192": get_vehicle_status(192),
-                                                     "status100": get_vehicle_status(100)})
+    return templates.TemplateResponse("index.html", {"request": request, "vdict": get_latest_vehicles_status()})
 
 
 @app.get("/status/{vehicle}", response_class=HTMLResponse)
