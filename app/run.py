@@ -1,10 +1,7 @@
-from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect, BackgroundTasks
+from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from datetime import datetime
 from functools import lru_cache
-from psycopg_pool import AsyncConnectionPool
 from contextlib import asynccontextmanager
 from app.config import get_settings
 from app.db import get_async_pool, get_conn
