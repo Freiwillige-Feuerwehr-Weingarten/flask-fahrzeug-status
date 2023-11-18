@@ -27,3 +27,4 @@ uvicorn app.run:app --reload
 ```
 
 Note that this app is expecting a created DB that is filled with data from another source for now. As an example you can use this [Project](https://github.com/Freiwillige-Feuerwehr-Weingarten/fireboard-scraper) to scrape fireboard.net for vehicle data, if you have it available there.
+Example of how this could be depoyed to debian can be found on [Medium.com](https://ashfaque.medium.com/deploy-fastapi-app-on-debian-with-nginx-uvicorn-and-systemd-2d4b9b12d724)
