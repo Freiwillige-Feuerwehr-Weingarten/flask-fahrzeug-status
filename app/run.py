@@ -13,9 +13,10 @@ import asyncio
 
 ws_manager = get_connection_manager()
 settings = get_settings()
+async_pool = get_async_pool()
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
-async_pool = get_async_pool()
+
 
 class RelevantVehicles:
     vehicle_dict = {}
