@@ -1,0 +1,9 @@
+version: '3'
+services:
+  webapp-status:
+    build: .
+    container_name: "webapp-status-container"
+    ports:
+      - "8000:15400"
+    volumes:
+      - ./app/:/app
