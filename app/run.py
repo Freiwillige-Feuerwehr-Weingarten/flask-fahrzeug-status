@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 from functools import lru_cache
 from contextlib import asynccontextmanager
@@ -99,6 +99,11 @@ def get_latest_vehicles_status() -> dict:
                 except (Exception, psycopg.DatabaseError) as e:
                     pass
     return vehicle_status_dict
+
+
+@app.get('/favicon.ico', include_in_schema=False)
+async def favicon():
+    return FileResponse('favicon.svg')
 
 
 @app.get("/", response_class=HTMLResponse)
