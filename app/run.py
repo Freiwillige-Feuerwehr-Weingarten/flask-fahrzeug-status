@@ -9,6 +9,7 @@ from app.websocket import get_connection_manager
 import psycopg
 import json
 import asyncio
+import uvicorn
 
 
 ws_manager = get_connection_manager()
@@ -123,4 +124,4 @@ async def status(request: Request, vehicle: str):
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0, port=5000')
+    uvicorn.run(app, host='0.0.0.0, port=5000')
