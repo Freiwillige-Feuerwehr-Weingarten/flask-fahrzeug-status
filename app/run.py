@@ -5,32 +5,13 @@ from functools import lru_cache
 from contextlib import asynccontextmanager
 from app.config import get_settings
 from app.db import get_async_pool, get_conn
+from app.websocket import get_connection_manager
 import psycopg
 import json
 import asyncio
 
 
-class ConnectionManager:
-    def __init__(self):
-        self.active_connections: list[WebSocket] = []
-
-    async def connect(self, websocket: WebSocket):
-        await websocket.accept()
-        print(f"Well hello there")
-        self.active_connections.append(websocket)
-
-    def disconnect(self, websocket: WebSocket):
-        self.active_connections.remove(websocket)
-
-    async def send_personal_message(self, message: str, websocket: WebSocket):
-        await websocket.send_text(message)
-
-    async def broadcast(self, message: str):
-        for connection in self.active_connections:
-            await connection.send_text(message)
-
-
-ws_manager = ConnectionManager()
+ws_manager = get_connection_manager()
 settings = get_settings()
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
