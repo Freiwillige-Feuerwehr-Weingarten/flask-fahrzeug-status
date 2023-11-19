@@ -12,10 +12,19 @@ import asyncio
 import uvicorn
 
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    asyncio.create_task(check_async_connection())
+    print("In contextmanager")
+    await async_pool.open()
+    yield
+    pass
+
+
 ws_manager = get_connection_manager()
 settings = get_settings()
 async_pool = get_async_pool()
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
 templates = Jinja2Templates(directory="templates")
 
 
@@ -39,19 +48,25 @@ async def check_async_connection():
         print("check async connections")
         await async_pool.check()
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    asyncio.create_task(check_async_connection())
-    yield
-    pass
-
 
 async def get_newest_status():
     # no async connection needed here
-    with get_conn() as conn:
-        conn.execute("LISTEN status_notification")
+    #with get_conn() as conn:
+    #    conn.execute("LISTEN status_notification")
+    #    print(f"Notification received")
+    #    for notify in conn.notifies():
+    #        print(notify)
+    #        splits = notify.payload.strip("()").split(",")
+    #        return splits[0], splits[1]
+    #return
+
+    async with async_pool.connection() as conn:
+        print(f"Awaiting LISTEN status_notification")
+        await conn.set_autocommit(True)
+        await conn.execute("LISTEN status_notification")
         print(f"Notification received")
-        for notify in conn.notifies():
+        # generator = conn.notifies()
+        async for notify in conn.notifies():
             print(notify)
             splits = notify.payload.strip("()").split(",")
             return splits[0], splits[1]
@@ -62,15 +77,18 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
     await ws_manager.connect(websocket)
     try:
         while True:
+            print(get_relevant_vehicles().vehicle_dict)
             issi, status = await get_newest_status()
-            if issi in get_relevant_vehicles().vehicle_dict:
+            print(f"Issi {issi}, Status {status}")
+            vehicles = get_relevant_vehicles().vehicle_dict
+            if int(issi) in vehicles:
                 new_status = dict(issi=issi, status=status)
                 await ws_manager.broadcast(json.dumps(new_status))
             else:
                 print(f"Skipping irrelevant vehicle status")
-    except WebSocketDisconnect:
+    except (websocket.exceptions.ConnectionClosedOK, websocket.exceptions.ConnectionClosedError):
         # TODO: Could also get psycopg.OperatoinalError
-        print(f"Client disconnected")
+        print(f"Client {client_id} disconnected")
         ws_manager.disconnect(websocket)
 
 
@@ -88,7 +106,6 @@ def get_vehicle_status(vehicle):
     else: 
         return records[0]
     
-
 def get_latest_vehicles_status() -> dict:
     vehicle_status_dict = dict()
     with get_conn() as connection:
