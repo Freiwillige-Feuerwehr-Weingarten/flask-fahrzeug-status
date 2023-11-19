@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, Request, WebSocket, WebSocketException
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 from functools import lru_cache
@@ -50,22 +50,11 @@ async def check_async_connection():
 
 
 async def get_newest_status():
-    # no async connection needed here
-    #with get_conn() as conn:
-    #    conn.execute("LISTEN status_notification")
-    #    print(f"Notification received")
-    #    for notify in conn.notifies():
-    #        print(notify)
-    #        splits = notify.payload.strip("()").split(",")
-    #        return splits[0], splits[1]
-    #return
-
     async with async_pool.connection() as conn:
         print(f"Awaiting LISTEN status_notification")
         await conn.set_autocommit(True)
         await conn.execute("LISTEN status_notification")
         print(f"Notification received")
-        # generator = conn.notifies()
         async for notify in conn.notifies():
             print(notify)
             splits = notify.payload.strip("()").split(",")
@@ -86,7 +75,7 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
                 await ws_manager.broadcast(json.dumps(new_status))
             else:
                 print(f"Skipping irrelevant vehicle status")
-    except (websocket.exceptions.ConnectionClosedOK, websocket.exceptions.ConnectionClosedError):
+    except WebSocketException:
         # TODO: Could also get psycopg.OperatoinalError
         print(f"Client {client_id} disconnected")
         ws_manager.disconnect(websocket)
