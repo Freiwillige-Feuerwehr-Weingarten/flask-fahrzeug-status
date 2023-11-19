@@ -130,5 +130,8 @@
             messages.innerHTML = "Status " + obj.status
             console.log(obj)
         };
+        window.addEventListener('beforeunload', function() {
+            ws.close();
+        });
     </script>
 {% endblock %}
