@@ -12,4 +12,4 @@ def get_conn():
 
 @lru_cache()
 def get_async_pool():
-    return AsyncConnectionPool(conninfo=conninfo)
+    return AsyncConnectionPool(conninfo=conninfo, open=False)
