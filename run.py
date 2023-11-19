@@ -6,17 +6,23 @@ from contextlib import asynccontextmanager
 from app.config import get_settings
 from app.db import get_async_pool, get_conn
 from app.websocket import get_connection_manager
+from app.database import db_setup
+from app.api.fahrzeuge import fahrzeuge_router
+from app.database.models import fahrzeuge
+# from app.database.models import fahrzeuge
+from pydantic import BaseModel
 import psycopg
 import json
 import asyncio
 import uvicorn
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     asyncio.create_task(check_async_connection())
     print("In contextmanager")
     await async_pool.open()
+    async with db_setup.async_engine.begin() as aconn:
+        await aconn.run_sync(fahrzeuge.Base.metadata.create_all)
     yield
     pass
 
@@ -34,6 +40,7 @@ app = FastAPI(
         "name": "MIT",
     },
     lifespan=lifespan)
+app.include_router(fahrzeuge_router)
 templates = Jinja2Templates(directory="templates")
 
 
