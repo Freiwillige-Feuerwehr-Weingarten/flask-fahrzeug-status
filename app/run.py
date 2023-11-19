@@ -24,7 +24,16 @@ async def lifespan(app: FastAPI):
 ws_manager = get_connection_manager()
 settings = get_settings()
 async_pool = get_async_pool()
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(
+    title="Fahrzeug Status",
+    version="0.0.1",
+    contact={
+        "email": "admin@ff-weingarten.de",
+    },
+    license_info={
+        "name": "MIT",
+    },
+    lifespan=lifespan)
 templates = Jinja2Templates(directory="templates")
 
 
