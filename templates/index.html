@@ -133,7 +133,19 @@
                 console.log(obj)
             };
 
-
+            let buttonElements = document.getElementsByTagName('button')
+            for (let i = 0; i < buttonElements.length; i++) {
+                let inner = buttonElements[i].innerHTML
+                if (inner.includes("Status: 1")) {
+                    buttonElements[i].setAttribute('class', 'btn btn-secondary btn-lg w-100')
+                } else if (inner.includes("Status: 2")) {
+                    buttonElements[i].setAttribute('class', 'btn btn-success btn-lg w-100')
+                } else if (inner.includes("Status: 3")) {
+                    buttonElements[i].setAttribute('class', 'btn btn-warning btn-lg w-100')
+                } else if (inner.includes("Status: 4")) {
+                    buttonElements[i].setAttribute('class', 'btn btn-danger btn-lg w-100')
+                } 
+            }
 
             window.addEventListener('beforeunload', function() {
                 ws.close();
