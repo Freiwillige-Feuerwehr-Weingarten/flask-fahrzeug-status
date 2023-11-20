@@ -42,7 +42,6 @@ def get_vehicle_status(vehicle):
     else: 
         return records[0]
     
-
 class RelevantVehicles:
     vehicle_dict = {}
     def __init__(self):

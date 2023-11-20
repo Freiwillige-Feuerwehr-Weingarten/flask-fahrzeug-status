@@ -10,8 +10,9 @@ from app.database import db_setup
 from app.api.fahrzeuge import fahrzeuge_router
 from app.api.status import status_router
 from app.database.models import fahrzeuge, status
-from pydantic import BaseModel
-import psycopg
+from app.api.utils.status import get_latest_vehicles_status, get_relevant_vehicles
+# from pydantic import BaseModel
+# import psycopg
 import json
 import asyncio
 import uvicorn
@@ -45,20 +46,6 @@ app.include_router(fahrzeuge_router)
 app.include_router(status_router)
 templates = Jinja2Templates(directory="templates")
 
-
-class RelevantVehicles:
-    vehicle_dict = {}
-    def __init__(self):
-        with get_conn() as conn:
-            with conn.cursor() as cursor:
-                cursor.execute("SELECT issi, funkrufname FROM fahrzeuge")
-                results = cursor.fetchall()
-                for row in results:
-                    self.vehicle_dict[row[0]] = row[1]
-
-@lru_cache
-def get_relevant_vehicles():
-    return RelevantVehicles()
 
 async def check_async_connection():
     while True:
@@ -97,37 +84,6 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
         # TODO: Could also get psycopg.OperatoinalError
         print(f"Client {client_id} disconnected")
         ws_manager.disconnect(websocket)
-
-
-def get_vehicle_status(vehicle):
-    with get_conn() as connection:
-        with connection.cursor() as cursor:
-            try:
-                cursor.execute("SELECT fahrzeug_status.status FROM fahrzeug_status, fahrzeuge WHERE fahrzeug_status.issi = fahrzeuge.issi AND fahrzeuge.funkrufname = '%s' ORDER BY timestamp DESC LIMIT 1" %vehicle)
-            except (Exception, psycopg.DatabaseError) as error:
-                return "Nicht bekannt"
-            records = cursor.fetchone()
-
-    if not records:
-        return "Nicht bekannt"
-    else: 
-        return records[0]
-    
-def get_latest_vehicles_status() -> dict:
-    vehicle_status_dict = dict()
-    with get_conn() as connection:
-        with connection.cursor() as cursor:
-            for issi in get_relevant_vehicles().vehicle_dict: 
-                try:
-                    cursor.execute("SELECT fahrzeug_status.status FROM fahrzeug_status, fahrzeuge WHERE fahrzeug_status.issi = fahrzeuge.issi AND fahrzeuge.issi = '%s' ORDER BY timestamp DESC LIMIT 1" %issi)
-                    r = cursor.fetchone()
-                    if not r:
-                        vehicle_status_dict[issi] = "Nicht bekannt"
-                    else:
-                        vehicle_status_dict[issi] = r[0]
-                except (Exception, psycopg.DatabaseError) as e:
-                    pass
-    return vehicle_status_dict
 
 
 @app.get('/favicon.ico', include_in_schema=False)
