@@ -120,18 +120,24 @@
         </div>
     </div>
     <script type="text/javascript">
-        var client_id = Date.now()
-        const server = "{{ server_hostname }}"
-        const port = "{{ server_port }}"
-        var ws = new WebSocket(`ws://${server}:${port}/ws/${client_id}`);
-        ws.onmessage = function(event) {
-            var obj = JSON.parse(event.data)
-            var messages = document.getElementById(obj.issi)
-            messages.innerHTML = "Status " + obj.status
-            console.log(obj)
-        };
-        window.addEventListener('beforeunload', function() {
-            ws.close();
-        });
+        window.onload = function() {
+            var client_id = Date.now()
+            const server = "{{ server_hostname }}"
+            const port = "{{ server_port }}"
+            var ws = new WebSocket(`ws://${server}:${port}/ws/${client_id}`);
+            ws.onmessage = function(event) {
+                var obj = JSON.parse(event.data)
+                var messages = document.getElementById(obj.issi)
+                messages.innerHTML = "Status: " + obj.status
+
+                console.log(obj)
+            };
+
+
+
+            window.addEventListener('beforeunload', function() {
+                ws.close();
+            });
+        }
     </script>
 {% endblock %}
