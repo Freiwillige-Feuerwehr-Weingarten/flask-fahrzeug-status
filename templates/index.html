@@ -129,7 +129,24 @@
                 var obj = JSON.parse(event.data)
                 var messages = document.getElementById(obj.issi)
                 messages.innerHTML = "Status: " + obj.status
-
+                switch (obj.status) {
+                    case '1':
+                        console.log("Changing to 1");
+                        messages.setAttribute('class', 'btn btn-secondary btn-lg w-100'); 
+                        break;
+                    case '2':
+                        console.log("Changing to 2");
+                        messages.setAttribute('class', 'btn btn-success btn-lg w-100');
+                        break;
+                    case '3':
+                        console.log("Changing to 3");
+                        messages.setAttribute('class', 'btn btn-warning btn-lg w-100');
+                        break;
+                    case '4':
+                        console.log("Changing to 4");
+                        messages.setAttribute('class', 'btn btn-danger btn-lg w-100');
+                        break;
+                }
                 console.log(obj)
             };
 
