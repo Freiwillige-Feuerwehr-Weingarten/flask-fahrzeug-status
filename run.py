@@ -13,6 +13,7 @@ from app.database.models import fahrzeuge, status
 from app.api.utils.status import get_latest_vehicles_status, get_relevant_vehicles
 # from pydantic import BaseModel
 # import psycopg
+import sys
 import json
 import asyncio
 import uvicorn
@@ -21,6 +22,8 @@ import uvicorn
 async def lifespan(app: FastAPI):
     asyncio.create_task(check_async_connection())
     print("In contextmanager")
+    # TODO: remove
+    sys.dont_write_bytecode = True
     await async_pool.open()
     async with db_setup.async_engine.begin() as aconn:
         await aconn.run_sync(fahrzeuge.Base.metadata.create_all)
