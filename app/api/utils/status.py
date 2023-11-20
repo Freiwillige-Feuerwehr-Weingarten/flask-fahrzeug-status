@@ -39,5 +39,5 @@ class RelevantVehicles:
                     self.vehicle_dict[row[0]] = row[1]
 
 @lru_cache
-def get_relevant_vehicles():
+def get_relevant_vehicles() -> RelevantVehicles:
     return RelevantVehicles()
