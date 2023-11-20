@@ -143,16 +143,5 @@ async def root(request: Request):
                                                      "server_port": settings.server_port})
 
 
-@app.get("/status/{vehicle}", response_class=HTMLResponse)
-async def aafahrzeug_status(request: Request, vehicle: str):
-    async with async_pool.connection() as conn:
-        async with conn.cursor() as cursor:
-            await cursor.execute("SELECT * FROM fahrzeug_status, fahrzeuge WHERE fahrzeug_status.issi = fahrzeuge.issi AND fahrzeuge.funkrufname = '%s' ORDER BY timestamp DESC" %vehicle)
-            records = await cursor.fetchall()
-            return templates.TemplateResponse("fahrzeug.html", {"request": request,
-                                                                "vehicle": vehicle,
-                                                                "records": records}) 
-
-
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=5000)
