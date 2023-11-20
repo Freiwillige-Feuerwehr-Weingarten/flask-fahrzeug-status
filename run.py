@@ -8,8 +8,8 @@ from app.db import get_async_pool, get_conn
 from app.websocket import get_connection_manager
 from app.database import db_setup
 from app.api.fahrzeuge import fahrzeuge_router
-from app.database.models import fahrzeuge
-# from app.database.models import fahrzeuge
+from app.api.status import status_router
+from app.database.models import fahrzeuge, status
 from pydantic import BaseModel
 import psycopg
 import json
@@ -23,6 +23,7 @@ async def lifespan(app: FastAPI):
     await async_pool.open()
     async with db_setup.async_engine.begin() as aconn:
         await aconn.run_sync(fahrzeuge.Base.metadata.create_all)
+        await aconn.run_sync(status.Base.metadata.create_all)
     yield
     pass
 
@@ -41,6 +42,7 @@ app = FastAPI(
     },
     lifespan=lifespan)
 app.include_router(fahrzeuge_router)
+app.include_router(status_router)
 templates = Jinja2Templates(directory="templates")
 
 
@@ -142,7 +144,7 @@ async def root(request: Request):
 
 
 @app.get("/status/{vehicle}", response_class=HTMLResponse)
-async def status(request: Request, vehicle: str):
+async def aafahrzeug_status(request: Request, vehicle: str):
     async with async_pool.connection() as conn:
         async with conn.cursor() as cursor:
             await cursor.execute("SELECT * FROM fahrzeug_status, fahrzeuge WHERE fahrzeug_status.issi = fahrzeuge.issi AND fahrzeuge.funkrufname = '%s' ORDER BY timestamp DESC" %vehicle)

@@ -1,9 +1,7 @@
-from sqlalchemy import Integer, String, Column, TIMESTAMP, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy import Integer, String, Column, TIMESTAMP
 from app.database.db_setup import Base
-from app.database.models.fahrzeuge import Fahrzeuge
 
-class Fahrzeug_Status(Base):
+class Status(Base):
     __tablename__ = "fahrzeug_status"
 
     issi = Column(Integer, nullable=False)
