@@ -28,20 +28,21 @@ def get_latest_vehicles_status() -> dict:
     return vehicle_status_dict
 
 
-def get_vehicle_status(vehicle):
-    with get_conn() as connection:
-        with connection.cursor() as cursor:
-            try:
-                cursor.execute("SELECT fahrzeug_status.status FROM fahrzeug_status, fahrzeuge WHERE fahrzeug_status.issi = fahrzeuge.issi AND fahrzeuge.funkrufname = '%s' ORDER BY timestamp DESC LIMIT 1" %vehicle)
-            except (Exception, psycopg.DatabaseError) as error:
-                return "Nicht bekannt"
-            records = cursor.fetchone()
+#def get_vehicle_status(vehicle):
+#    with get_conn() as connection:
+#        with connection.cursor() as cursor:
+#            try:
+#                cursor.execute("SELECT fahrzeug_status.status FROM fahrzeug_status, fahrzeuge WHERE fahrzeug_status.issi = fahrzeuge.issi AND fahrzeuge.funkrufname = '%s' ORDER BY timestamp DESC LIMIT 1" %vehicle)
+#            except (Exception, psycopg.DatabaseError) as error:
+#                return "Nicht bekannt"
+#            records = cursor.fetchone()
+#
+#    if not records:
+#        return "Nicht bekannt"
+#    else: 
+#        return records[0]
 
-    if not records:
-        return "Nicht bekannt"
-    else: 
-        return records[0]
-    
+
 class RelevantVehicles:
     vehicle_dict = {}
     def __init__(self):

@@ -10,7 +10,7 @@ from app.database import db_setup
 from app.api.fahrzeuge import fahrzeuge_router
 from app.api.status import status_router
 from app.database.models import fahrzeuge, status
-from app.api.utils.status import get_latest_vehicles_status, get_relevant_vehicles
+from app.api.utils.status import get_latest_vehicles_status, get_relevant_vehicles, RelevantVehicles
 # from pydantic import BaseModel
 # import psycopg
 import sys
@@ -30,7 +30,6 @@ async def lifespan(app: FastAPI):
         await aconn.run_sync(status.Base.metadata.create_all)
     yield
     pass
-
 
 ws_manager = get_connection_manager()
 settings = get_settings()
