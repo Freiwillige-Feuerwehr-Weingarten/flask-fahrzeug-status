@@ -13,10 +13,17 @@ from app.db import get_async_pool
 status_router = fastapi.APIRouter()
 templates = Jinja2Templates(directory="templates")
 
-@status_router.get("/status/", response_model=list[Status])
+@status_router.get("/api/status/", response_model=list[Status])
 async def aget_status(db: AsyncSession = fastapi.Depends(get_async_db)) -> list[Status]:
     status = await get_status(db)
     return status
+
+
+@status_router.get("/api/status/{issi}", response_model=list[Status])
+async def aget_status_issi(issi: int, db: AsyncSession = fastapi.Depends(get_async_db)) -> list[Status]:
+    status = await get_status(db, issi)
+    return status
+
 
 @status_router.get("/status/{vehicle}", response_class=HTMLResponse)
 async def aafahrzeug_status(request: Request, vehicle: str):

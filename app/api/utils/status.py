@@ -6,8 +6,11 @@ from sqlalchemy.future import select
 from app.database.models.status import Status
 from app.db import get_conn
 
-async def get_status(db: AsyncSession):
-    query = select(Status)
+async def get_status(db: AsyncSession, issi: int = 0):
+    if issi:
+        query = select(Status).where(Status.issi== issi)
+    else:
+        query = select(Status)
     result = await db.execute(query)
     return result.scalars().all()
 
