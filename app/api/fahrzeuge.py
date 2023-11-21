@@ -15,5 +15,4 @@ async def aget_vehicles(db: AsyncSession = fastapi.Depends(get_async_db)) -> lis
 
 @fahrzeuge_router.post("/vehicles/")
 async def apost_vehicles(post: Fahrzeuge) -> Fahrzeuge:
-    print(post)
     return post
