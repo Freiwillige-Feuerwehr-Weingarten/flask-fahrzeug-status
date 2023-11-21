@@ -8,7 +8,7 @@ from app.db import get_conn
 
 async def get_status(db: AsyncSession, issi: int = 0):
     if issi:
-        query = select(Status).where(Status.issi== issi)
+        query = select(Status).where(Status.issi== int(issi))
     else:
         query = select(Status)
     result = await db.execute(query)
