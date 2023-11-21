@@ -1,10 +1,12 @@
-from sqlalchemy import Integer, String, Column, TIMESTAMP
+from sqlalchemy import Integer, String, TIMESTAMP
+from sqlalchemy.orm import Mapped, mapped_column
 from app.database.db_setup import Base
+from datetime import datetime
 
 class Status(Base):
     __tablename__ = "fahrzeug_status"
 
-    issi = Column(Integer, nullable=False)
-    status = Column(String, nullable=False)
-    timestamp = Column(TIMESTAMP(timezone=False))
-    id = Column(Integer, index=True, primary_key=True, nullable=False)
+    issi: Mapped[int] = mapped_column(Integer, nullable=False)
+    status: Mapped[str] = mapped_column(String, nullable=False)
+    timestamp: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=False))
+    id: Mapped[int] = mapped_column(Integer, index=True, primary_key=True, nullable=False)
