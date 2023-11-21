@@ -23,11 +23,10 @@ async def aget_status(db: AsyncSession = fastapi.Depends(get_async_db)) -> list[
 
 @status_router.post("/api/status/", response_model=Status)
 async def handle_post_status(post: Status, db: AsyncSession = fastapi.Depends(get_async_db)) -> Status:
-
     new_status = status.Status(issi=post.issi,
            status=post.status,
-           timestamp=datetime.now(),
-           id=12345)
+           timestamp=post.timestamp,
+           id=post.id)
     db.add(new_status)
     await db.commit()
     await db.refresh(new_status)
