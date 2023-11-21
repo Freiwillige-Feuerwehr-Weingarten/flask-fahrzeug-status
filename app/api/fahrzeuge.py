@@ -13,6 +13,11 @@ async def aget_vehicles(db: AsyncSession = fastapi.Depends(get_async_db)) -> lis
     vehicles = await get_vehicles(db)
     return vehicles
 
-@fahrzeuge_router.post("/vehicles/")
-async def apost_vehicles(post: Fahrzeuge) -> Fahrzeuge:
-    return post
+@fahrzeuge_router.post("/vehicles/", response_model=Fahrzeuge)
+async def apost_vehicles(post: Fahrzeuge, db: AsyncSession = fastapi.Depends(get_async_db)) -> Fahrzeuge:
+    new_vehicle = Fahrzeuge(issi=post.issi,
+                            funkrufname=post.funkrufname)
+    db.add(new_vehicle)
+    await db.commit
+    await db.refresh(new_vehicle)
+    return new_vehicle
