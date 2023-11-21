@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Fahrzeugstatus für {{ vehicle }}</h1>
+    <h1>Fahrzeugstatus für {{ vehicle.funkrufname }}</h1>
     <table class="table">
         <thead class="thead-dark">
             <tr>
@@ -11,8 +11,8 @@
         <tbody>
     {% for record in records %}
             <tr>
-                <td>{{record[1]}}</td>
-                <td>{{record[2]}}</td>
+                <td>{{ record.status }}</td>
+                <td>{{ record.timestamp}}</td>
     {% endfor %}
             </tr>
         </tbody>

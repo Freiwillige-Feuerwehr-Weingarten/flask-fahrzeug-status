@@ -8,6 +8,7 @@ from datetime import datetime
 
 from app.database.db_setup import get_async_db
 from app.api.utils.status import get_status
+from app.api.utils.fahrzeuge import get_radioname_by_issi
 from app.pydantic_schemas.status import Status
 from app.db import get_async_pool
 from app.database.models import status
@@ -39,12 +40,12 @@ async def aget_status_issi(issi: int, db: AsyncSession = fastapi.Depends(get_asy
     return status
 
 
-@status_router.get("/status/{vehicle}", response_class=HTMLResponse)
-async def aafahrzeug_status(request: Request, vehicle: str):
-    async with get_async_pool().connection() as conn:
-        async with conn.cursor() as cursor:
-            await cursor.execute("SELECT * FROM fahrzeug_status, fahrzeuge WHERE fahrzeug_status.issi = fahrzeuge.issi AND fahrzeuge.funkrufname = '%s' ORDER BY timestamp DESC" %vehicle)
-            records = await cursor.fetchall()
-            return templates.TemplateResponse("fahrzeug.html", {"request": request,
-                                                                "vehicle": vehicle,
-                                                                "records": records}) 
+@status_router.get("/status/{issi}", response_class=HTMLResponse)
+async def handle_get_status_html(issi: int, request: Request, db: AsyncSession = fastapi.Depends(get_async_db)):
+    status_list = await get_status(db, int(issi))
+    radio_name = await get_radioname_by_issi(db, int(issi))
+    return templates.TemplateResponse("fahrzeug.html", {"request": request,
+                                                              "vehicle": radio_name,
+                                                              "records": status_list
+
+    })
