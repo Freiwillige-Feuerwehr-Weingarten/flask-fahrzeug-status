@@ -27,6 +27,8 @@ class Einsatz(BaseModel):
 class Einheit(BaseModel):
     id: Optional[int] = Field(default=None, primary_key=True)
     unit: str
-    deployment_id: int
+    deployment_id: Optional[int] = Field(default=None)
+    external_source: Optional[str] = Field(default=None)
+    external_deployment_id: Optional[int] = Field(default=None)
     class Config:
         from_attributes = True
