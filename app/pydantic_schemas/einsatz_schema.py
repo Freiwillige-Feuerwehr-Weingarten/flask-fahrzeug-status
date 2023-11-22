@@ -22,3 +22,10 @@ class Einsatz(BaseModel):
     # TODO: If not set make sure that a timestamp is used when this was commited against the API
     class Config:
         from_attributes = True
+
+
+class Einheit(BaseModel):
+    id: int
+    deployment_id: int
+    class Config:
+        from_attributes = True
