@@ -11,7 +11,7 @@ from app.api.utils.status import get_status
 from app.api.utils.fahrzeuge import get_radioname_by_issi
 from app.pydantic_schemas import status_schema
 from app.db import get_async_pool
-from app.database.models import status
+from app.database.models import status_model
 
 status_router = fastapi.APIRouter()
 templates = Jinja2Templates(directory="templates")
@@ -24,7 +24,7 @@ async def aget_status(db: AsyncSession = fastapi.Depends(get_async_db)) -> list[
 
 @status_router.post("/api/status/", response_model=status_schema.Status)
 async def handle_post_status(post: status_schema.Status, db: AsyncSession = fastapi.Depends(get_async_db)) -> status_schema.Status:
-    new_status = status.Status(issi=post.issi,
+    new_status = status_model.Status(issi=post.issi,
            status=post.status,
            timestamp=post.timestamp,
            id=post.id)

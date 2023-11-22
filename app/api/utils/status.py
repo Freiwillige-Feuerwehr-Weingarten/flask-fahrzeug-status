@@ -3,14 +3,14 @@ import psycopg
 from functools import lru_cache
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from app.database.models.status import Status
+from app.database.models import status_model
 from app.db import get_conn
 
 async def get_status(db: AsyncSession, issi: int = 0):
     if issi:
-        query = select(Status).where(Status.issi== int(issi))
+        query = select(status_model.Status).where(status_model.Status.issi == int(issi))
     else:
-        query = select(Status)
+        query = select(status_model.Status)
     result = await db.execute(query)
     return result.scalars().all()
 

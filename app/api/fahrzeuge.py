@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import exc
 
 from app.database.db_setup import get_async_db
-from app.database.models import fahrzeuge
+from app.database.models import fahrzeuge_model
 from app.api.utils.fahrzeuge import get_vehicles
 from app.pydantic_schemas import fahrzeuge_schema
 
@@ -17,7 +17,7 @@ async def handle_get_vehicles(db: AsyncSession = fastapi.Depends(get_async_db)) 
 
 @fahrzeuge_router.post("/api/vehicles/", response_model=fahrzeuge_schema.Fahrzeuge, status_code=fastapi.status.HTTP_201_CREATED)
 async def handle_post_vehicles(post: fahrzeuge_schema.Fahrzeuge, db: AsyncSession = fastapi.Depends(get_async_db)) -> fahrzeuge_schema.Fahrzeuge:
-    new_vehicle = fahrzeuge.Fahrzeuge(issi=post.issi,
+    new_vehicle = fahrzeuge_model.Fahrzeuge(issi=post.issi,
                             funkrufname=post.funkrufname)
     try:
         db.add(new_vehicle)
