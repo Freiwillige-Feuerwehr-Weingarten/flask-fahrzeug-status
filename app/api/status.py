@@ -4,6 +4,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.requests import Request
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import exc
 from datetime import datetime
 
 from app.database.db_setup import get_async_db
@@ -15,6 +16,7 @@ from app.database.models import status_model
 
 status_router = fastapi.APIRouter()
 templates = Jinja2Templates(directory="templates")
+
 
 @status_router.get("/api/status/", response_model=list[status_schema.Status])
 async def aget_status(db: AsyncSession = fastapi.Depends(get_async_db)) -> list[status_schema.Status]:
@@ -28,9 +30,12 @@ async def handle_post_status(post: status_schema.Status, db: AsyncSession = fast
            status=post.status,
            timestamp=post.timestamp,
            id=post.id)
-    db.add(new_status)
-    await db.commit()
-    await db.refresh(new_status)
+    try:
+        db.add(new_status)
+        await db.commit()
+        await db.refresh(new_status)
+    except exc.IntegrityError:
+        raise fastapi.exceptions.HTTPException(status_code=400, detail="Dupclicate Entry")
     return new_status
 
 
