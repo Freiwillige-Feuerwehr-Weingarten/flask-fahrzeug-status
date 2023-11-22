@@ -34,3 +34,13 @@ async def handle_post_deployments(post: einsatz_schema.Einsatz, db: AsyncSession
     await db.commit()
     await db.refresh(new_deployment)
     return new_deployment
+
+
+@einsatz_router.post("/api/deployments/units", response_moodel=einsatz_schema.Einheit)
+async def handle_post_deployments_units(post: einsatz_schema.Einheit, db: AsyncSession = fastapi.Depends(get_async_db)) -> einsatz_schema.Einheit:
+    print(post)
+    new_unit = einsatz_model.Einheiten(id=post.id,
+                                       deployment_id=post.deployment_id)
+    db.add(new_unit)
+    await db.commit()
+    return new_unit
