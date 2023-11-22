@@ -25,7 +25,8 @@ class Einsatz(BaseModel):
 
 
 class Einheit(BaseModel):
-    id: str
+    id: Optional[int] = Field(default=None, primary_key=True)
+    unit: str
     deployment_id: int
     class Config:
         from_attributes = True

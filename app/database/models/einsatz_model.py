@@ -30,5 +30,6 @@ class Einsatz(Base):
 
 class Einheiten(Base):
     __tablename__ = "units"
-    id: Mapped[int] = mapped_column(String, index=True, nullable=False)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True, nullable=False, autoincrement=True)
+    unit: Mapped[str] = mapped_column(String, nullable=False)
     deployment_id: Mapped[int] = mapped_column(ForeignKey("deployment.id"))
