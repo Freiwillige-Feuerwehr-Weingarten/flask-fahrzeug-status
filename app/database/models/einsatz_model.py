@@ -1,7 +1,8 @@
-from sqlalchemy import Integer, String, Column, TIMESTAMP, MetaData
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import Integer, String, Column, TIMESTAMP, MetaData, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from geoalchemy2 import Geometry
 from datetime import datetime
+from typing import List
 from app.database.db_setup import Base
 
 
@@ -24,4 +25,10 @@ class Einsatz(Base):
     situation: Mapped[str] = mapped_column(String)
 
     timestamp_started: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=False), nullable=False)
+    children: Mapped[List["Einheiten"]] = relationship()
 
+
+class Einheiten(Base):
+    __tablename__ = "units"
+    id: Mapped[int] = mapped_column(Integer, index=True, primary_key=True, nullable=False)
+    deployment_id: Mapped[int] = mapped_column(ForeignKey("deployment.id"))
