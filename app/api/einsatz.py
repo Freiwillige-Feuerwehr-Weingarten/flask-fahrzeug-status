@@ -46,6 +46,8 @@ async def handle_post_deployments_units(post: einsatz_schema.Einheit, db: AsyncS
             deployment = await get_deployment_by_external_data(post.external_source, post.external_deployment_id, db)
         except exc.NoResultFound:
             raise fastapi.exceptions.HTTPException(status_code=400, detail="Deployment doesn't exist")
+        except exc.MultipleResultsFound:
+            raise fastapi.exceptions.HTTPException(status_code=400, detail="Dataset is ambigous")
         new_unit.deployment_id = deployment.id
     db.add(new_unit)
     await db.commit()
