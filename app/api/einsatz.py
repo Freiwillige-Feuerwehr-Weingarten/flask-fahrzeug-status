@@ -1,9 +1,10 @@
 import fastapi
 
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import exc
 
 from app.database.db_setup import get_async_db
-from app.api.utils.einsatz import get_deployments
+from app.api.utils.einsatz import get_deployments, get_deployment_by_external_data
 from app.pydantic_schemas import einsatz_schema
 from app.database.models import einsatz_model
 
@@ -38,9 +39,14 @@ async def handle_post_deployments(post: einsatz_schema.Einsatz, db: AsyncSession
 
 @einsatz_router.post("/api/deployments/units", response_model=einsatz_schema.Einheit)
 async def handle_post_deployments_units(post: einsatz_schema.Einheit, db: AsyncSession = fastapi.Depends(get_async_db)) -> einsatz_schema.Einheit:
-    print(post)
     new_unit = einsatz_model.Einheiten(unit=post.unit,
                                        deployment_id=post.deployment_id)
+    if not post.deployment_id:
+        try:
+            deployment = await get_deployment_by_external_data(post.external_source, post.external_deployment_id, db)
+        except exc.NoResultFound:
+            raise fastapi.exceptions.HTTPException(status_code=400, detail="Deployment doesn't exist")
+        new_unit.deployment_id = deployment.id
     db.add(new_unit)
     await db.commit()
     await db.refresh(new_unit)
