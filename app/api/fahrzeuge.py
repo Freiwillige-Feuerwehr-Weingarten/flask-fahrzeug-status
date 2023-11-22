@@ -10,10 +10,12 @@ from app.pydantic_schemas import fahrzeuge_schema
 
 fahrzeuge_router = fastapi.APIRouter()
 
+
 @fahrzeuge_router.get("/api/vehicles/", response_model=list[fahrzeuge_schema.Fahrzeuge])
 async def handle_get_vehicles(db: AsyncSession = fastapi.Depends(get_async_db)) -> list[fahrzeuge_schema.Fahrzeuge]:
     vehicles = await get_vehicles(db)
     return vehicles
+
 
 @fahrzeuge_router.post("/api/vehicles/", response_model=fahrzeuge_schema.Fahrzeuge, status_code=fastapi.status.HTTP_201_CREATED)
 async def handle_post_vehicles(post: fahrzeuge_schema.Fahrzeuge, db: AsyncSession = fastapi.Depends(get_async_db)) -> fahrzeuge_schema.Fahrzeuge:
