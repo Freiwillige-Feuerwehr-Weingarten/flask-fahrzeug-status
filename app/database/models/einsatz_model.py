@@ -1,14 +1,15 @@
-from sqlalchemy import Integer, String, Column, TIMESTAMP, MetaData, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from geoalchemy2 import Geometry
 from datetime import datetime
 from typing import List
+# from geoalchemy2 import Geometry
+
+from sqlalchemy import Integer, String, TIMESTAMP, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database.db_setup import Base
 
 
 class Einsatz(Base):
     __tablename__ = "deployment"
-    
+
     id: Mapped[int] = mapped_column(Integer, index=True, primary_key=True, nullable=False, autoincrement=True)
     external_deployment_id: Mapped[int] = mapped_column(Integer)
     external_source: Mapped[str] = mapped_column(String)
