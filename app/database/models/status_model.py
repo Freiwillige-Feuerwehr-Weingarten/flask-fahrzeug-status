@@ -1,7 +1,9 @@
+from datetime import datetime
+
 from sqlalchemy import Integer, String, TIMESTAMP
 from sqlalchemy.orm import Mapped, mapped_column
 from app.database.db_setup import Base
-from datetime import datetime
+
 
 class Status(Base):
     __tablename__ = "fahrzeug_status"
