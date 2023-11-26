@@ -21,6 +21,7 @@ async def aget_deployments(db: AsyncSession = fastapi.Depends(get_async_db)) -> 
 async def handle_post_deployments(post: einsatz_schema.Einsatz, db: AsyncSession = fastapi.Depends(get_async_db)) -> einsatz_schema.Einsatz:
     print(post)
     new_deployment = einsatz_model.Einsatz(keyword=post.keyword,
+                                           keyword_lst=post.keyword_lst,
                                            external_deployment_id=post.external_deployment_id,
                                            external_source=post.external_source,
                                            external_source_id=post.external_source_id,

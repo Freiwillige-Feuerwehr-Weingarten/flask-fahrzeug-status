@@ -8,6 +8,7 @@ class Einsatz(BaseModel):
     external_source: Optional[str] = None
     external_source_id: Optional[int] = None
     keyword: str
+    keyword_lst: str
     announcement: Optional[str] = None
 
     location: Optional[str] = None

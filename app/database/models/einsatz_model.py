@@ -15,7 +15,7 @@ class Einsatz(Base):
     external_source: Mapped[str] = mapped_column(String)
     external_source_id: Mapped[int] = mapped_column(Integer)
     keyword: Mapped[str] = mapped_column(String, nullable=False)
-    # might need to add keyword_lst as it might be differnt to the above mentioned keyword
+    keyword_lst: Mapped[str] = mapped_column(String)
     announcement: Mapped[str] = mapped_column(String)
 
     location: Mapped[str] = mapped_column(String)
