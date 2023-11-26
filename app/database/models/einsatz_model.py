@@ -15,14 +15,15 @@ class Einsatz(Base):
     external_source: Mapped[str] = mapped_column(String)
     external_source_id: Mapped[int] = mapped_column(Integer)
     keyword: Mapped[str] = mapped_column(String, nullable=False)
+    # might need to add keyword_lst as it might be differnt to the above mentioned keyword
     announcement: Mapped[str] = mapped_column(String)
 
     location: Mapped[str] = mapped_column(String)
     location_name: Mapped[str] = mapped_column(String)
     location_info: Mapped[str] = mapped_column(String)
     # geo_location = mapped_column(Geometry(geometry_type='POINT'), srid=4326)
-    reporter_name: Mapped[str] = mapped_column(String)
-    repoter_info: Mapped[str] = mapped_column(String)
+    reporter_name: Mapped[str] = mapped_column(String) # should move to additonal info
+    repoter_info: Mapped[str] = mapped_column(String) # should move to additional info
     situation: Mapped[str] = mapped_column(String)
 
     timestamp_started: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=False), nullable=False)
