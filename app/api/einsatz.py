@@ -10,10 +10,12 @@ from app.database.models import einsatz_model
 
 einsatz_router = fastapi.APIRouter()
 
+
 @einsatz_router.get("/api/deployments/", response_model=list[einsatz_schema.Einsatz])
 async def aget_deployments(db: AsyncSession = fastapi.Depends(get_async_db)) -> list[einsatz_schema.Einsatz]:
     deployments = await get_deployments(db)
     return deployments
+
 
 @einsatz_router.post("/api/deployments/")
 async def handle_post_deployments(post: einsatz_schema.Einsatz, db: AsyncSession = fastapi.Depends(get_async_db)) -> einsatz_schema.Einsatz:
@@ -44,10 +46,10 @@ async def handle_post_deployments_units(post: einsatz_schema.Einheit, db: AsyncS
     if not post.deployment_id:
         try:
             deployment = await get_deployment_by_external_data(post.external_source, post.external_deployment_id, db)
-        except exc.NoResultFound:
-            raise fastapi.exceptions.HTTPException(status_code=400, detail="Deployment doesn't exist")
-        except exc.MultipleResultsFound:
-            raise fastapi.exceptions.HTTPException(status_code=400, detail="Dataset is ambigous")
+        except exc.NoResultFound as excep:
+            raise fastapi.exceptions.HTTPException(status_code=400, detail="Deployment doesn't exist") from excep
+        except exc.MultipleResultsFound as excep:
+            raise fastapi.exceptions.HTTPException(status_code=400, detail="Dataset is ambigous") from excep
         new_unit.deployment_id = deployment.id
     db.add(new_unit)
     await db.commit()
