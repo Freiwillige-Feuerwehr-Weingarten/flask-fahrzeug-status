@@ -16,14 +16,14 @@ class Einsatz(Base):
     external_source_id: Mapped[int] = mapped_column(Integer, nullable=True)
     keyword: Mapped[str] = mapped_column(String, nullable=False)
     keyword_lst: Mapped[str] = mapped_column(String, nullable=True)
-    announcement: Mapped[str] = mapped_column(String,  nulable=True)
+    announcement: Mapped[str] = mapped_column(String, nullable=True)
 
     location: Mapped[str] = mapped_column(String, nullable=True)
     location_name: Mapped[str] = mapped_column(String, nullable=True)
     location_info: Mapped[str] = mapped_column(String, nullable=True)
     geo_location = mapped_column(Geometry(geometry_type='POINT', srid=4326), nullable=True)
     reporter_name: Mapped[str] = mapped_column(String, nullable=True) # should move to additonal info
-    repoter_info: Mapped[str] = mapped_column(String, nulltable=True) # should move to additional info
+    repoter_info: Mapped[str] = mapped_column(String, nullable=True) # should move to additional info
     situation: Mapped[str] = mapped_column(String, nullable=True)
 
     timestamp_started: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=False), nullable=False)
