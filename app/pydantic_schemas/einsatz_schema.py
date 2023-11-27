@@ -20,7 +20,7 @@ class Einsatz(BaseModel):
     # geo_location = Column(Geography(geometry_type='POINT'), srid=4326)
     # geo_location: Optional[Point] = None
     reporter_name: Optional[str] = None
-    repoter_info: Optional[str] = None
+    reporter_info: Optional[str] = None
     situation: Optional[str] = None
 
     timestamp_started: datetime = None

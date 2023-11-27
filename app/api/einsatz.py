@@ -33,10 +33,9 @@ async def handle_post_deployments(post: einsatz_schema.Einsatz, db: AsyncSession
                                            location_longitude=post.location_longitude,
                                            # geo_location=post.geo_location,
                                            reporter_name=post.reporter_name,
-                                           repoter_info=post.repoter_info,
+                                           reporter_info=post.reporter_info,
                                            situation=post.situation,
                                            timestamp_started=post.timestamp_started)
-    # TODO: there a typo in "repoter_info"
     db.add(new_deployment)
     await db.commit()
     await db.refresh(new_deployment)

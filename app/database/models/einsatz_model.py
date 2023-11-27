@@ -25,7 +25,7 @@ class Einsatz(Base):
     location_latitude: Mapped[float] = mapped_column(Float, nullable=True)
     # geo_location = mapped_column(Geometry(geometry_type='POINT', srid=4326), nullable=True)
     reporter_name: Mapped[str] = mapped_column(String, nullable=True) # should move to additonal info
-    repoter_info: Mapped[str] = mapped_column(String, nullable=True) # should move to additional info
+    reporter_info: Mapped[str] = mapped_column(String, nullable=True) # should move to additional info
     situation: Mapped[str] = mapped_column(String, nullable=True)
 
     timestamp_started: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=False), nullable=False)
