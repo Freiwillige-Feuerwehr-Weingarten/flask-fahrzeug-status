@@ -15,6 +15,8 @@ class Einsatz(BaseModel):
     location: Optional[str] = None
     location_name: Optional[str] = None
     location_info: Optional[str] = None
+    location_longitude: Optional[float] = None
+    location_latitude: Optional[float] = None
     # geo_location = Column(Geography(geometry_type='POINT'), srid=4326)
     geo_location: Optional[Point] = None
     reporter_name: Optional[str] = None
