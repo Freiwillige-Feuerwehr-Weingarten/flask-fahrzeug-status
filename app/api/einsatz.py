@@ -29,6 +29,7 @@ async def handle_post_deployments(post: einsatz_schema.Einsatz, db: AsyncSession
                                            location=post.location,
                                            location_name=post.location_name,
                                            location_info=post.location_info,
+                                           geo_location=post.geo_location,
                                            reporter_name=post.reporter_name,
                                            repoter_info=post.repoter_info,
                                            situation=post.situation,
