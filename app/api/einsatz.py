@@ -37,7 +37,6 @@ async def handle_post_deployments(post: einsatz_schema.Einsatz, db: AsyncSession
                                            situation=post.situation,
                                            timestamp_started=post.timestamp_started)
     # TODO: there a typo in "repoter_info"
-    # TODO: external_deployment_id may not be zero in db?
     db.add(new_deployment)
     await db.commit()
     await db.refresh(new_deployment)
