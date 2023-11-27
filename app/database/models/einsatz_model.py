@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import List
-from geoalchemy2 import Geometry
+# from geoalchemy2 import Geometry
 
 from sqlalchemy import Integer, String, Float, TIMESTAMP, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -23,7 +23,7 @@ class Einsatz(Base):
     location_info: Mapped[str] = mapped_column(String, nullable=True)
     location_longitude: Mapped[float] = mapped_column(Float, nullable=True)
     location_latitude: Mapped[float] = mapped_column(Float, nullable=True)
-    geo_location = mapped_column(Geometry(geometry_type='POINT', srid=4326), nullable=True)
+    # geo_location = mapped_column(Geometry(geometry_type='POINT', srid=4326), nullable=True)
     reporter_name: Mapped[str] = mapped_column(String, nullable=True) # should move to additonal info
     repoter_info: Mapped[str] = mapped_column(String, nullable=True) # should move to additional info
     situation: Mapped[str] = mapped_column(String, nullable=True)

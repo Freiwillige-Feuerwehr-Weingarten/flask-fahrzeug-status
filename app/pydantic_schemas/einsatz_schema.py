@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import Optional
 from datetime import datetime
-from geojson_pydantic.geometries import Point
+# from geojson_pydantic.geometries import Point
 
 class Einsatz(BaseModel):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -18,7 +18,7 @@ class Einsatz(BaseModel):
     location_longitude: Optional[float] = None
     location_latitude: Optional[float] = None
     # geo_location = Column(Geography(geometry_type='POINT'), srid=4326)
-    geo_location: Optional[Point] = None
+    # geo_location: Optional[Point] = None
     reporter_name: Optional[str] = None
     repoter_info: Optional[str] = None
     situation: Optional[str] = None
